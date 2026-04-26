@@ -15,6 +15,6 @@ def measure_time1(func, data1, data2):
 
 def measure_time2(func, data):
     start = time.perf_counter()
-    func(data,)
+    func(data)
     end = time.perf_counter()
     return end - start
