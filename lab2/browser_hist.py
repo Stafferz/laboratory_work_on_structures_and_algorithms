@@ -83,7 +83,6 @@ class BrowserHistory:
 
 
     def get_all_entries(self):
-        """Вернуть все записи"""
         result = []
         for entry in self.entries:
             a = [entry.url, entry.timestamp.strftime("%d/%m/%Y %H:%M:%S"), entry.is_bookmark]
