@@ -1,5 +1,5 @@
 import base64
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class HistoryEntry:
     def __init__(self, url, timestamp, is_bookmark):
@@ -49,6 +49,13 @@ class BrowserHistory:
             if domain in entry.url.lower():
                 result.append(entry)
         return result
+    
+    def get_history_for_period(self, start, end):
+        result = []
+        for entry in self.entries:
+            if start <= entry.timestamp <= end:
+                result.append(entry)
+        return result
 
 
     def load_from_base64(self, filepath):
@@ -78,8 +85,8 @@ class BrowserHistory:
     def get_all_entries(self):
         """Вернуть все записи"""
         result = []
-        for entrie in self.entries:
-            a = [entrie.url, entrie.timestamp.strftime("%d/%m/%Y %H:%M:%S"), entrie.is_bookmark]
+        for entry in self.entries:
+            a = [entry.url, entry.timestamp.strftime("%d/%m/%Y %H:%M:%S"), entry.is_bookmark]
             result.append(a)
         return result
 
@@ -111,9 +118,17 @@ if __name__ == "__main__":
     for e in history.search_by_domain("google"):
         print(" -", e.url)
 
+    now = datetime.now()
+    start = now - timedelta(minutes=5)
+    print("\nИстория за последние 5 минут:")
+    for e in history.get_history_for_period(start, now):
+        print(f"  {e.timestamp.strftime("%d/%m/%Y %H:%M:%S")} - {e.url}")
+
+
+    
     test_file = "history.b64"
     history.load_from_base64(test_file)
-    print(f"Загружено {len(history)} записей")
+    print(f"\nЗагружено {len(history)} записей")
     print("Текущая после загрузки:", history.get_current().url)
     print("Полный список после загрузки:", history.get_all_entries())
 
